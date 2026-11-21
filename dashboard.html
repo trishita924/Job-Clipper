@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Clipper — Application Tracking Board</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand-badge">JC</div>
+        <div>
+          <h1>Job Clipper</h1>
+          <span class="subtitle" id="board-summary">0 applications tracked</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button type="button" id="btn-open-settings" class="btn btn-ghost">⚙ Reminders</button>
+        <button type="button" id="btn-export-csv" class="btn btn-ghost">⬇ Export CSV</button>
+        <button type="button" id="btn-add-job" class="btn btn-primary">+ Add Job</button>
+      </div>
+    </header>
+
+    <!-- Search & Filter Toolbar -->
+    <section class="toolbar" aria-label="Search and Filters">
+      <div class="search-wrap">
+        <input type="search" id="search-input" placeholder="Search by role, company, location, or notes..." />
+      </div>
+      <div class="filter-pills" role="group" aria-label="Filter by status">
+        <button type="button" class="pill-btn active" data-filter="ALL">All</button>
+        <button type="button" class="pill-btn" data-filter="SAVED">Saved</button>
+        <button type="button" class="pill-btn" data-filter="APPLIED">Applied</button>
+        <button type="button" class="pill-btn" data-filter="INTERVIEW">Interview</button>
+        <button type="button" class="pill-btn" data-filter="RESULT">Result</button>
+      </div>
+    </section>
+
+    <!-- 4-Column Kanban Board -->
+    <main class="kanban-board" id="kanban-board">
+      <section class="kanban-col" data-status="SAVED">
+        <div class="col-header">
+          <div class="col-title-wrap">
+            <span class="status-dot saved"></span>
+            <h2>SAVED</h2>
+          </div>
+          <span class="col-count" id="count-SAVED">0</span>
+        </div>
+        <div class="col-body" id="col-SAVED" data-status="SAVED"></div>
+      </section>
+
+      <section class="kanban-col" data-status="APPLIED">
+        <div class="col-header">
+          <div class="col-title-wrap">
+            <span class="status-dot applied"></span>
+            <h2>APPLIED</h2>
+          </div>
+          <span class="col-count" id="count-APPLIED">0</span>
+        </div>
+        <div class="col-body" id="col-APPLIED" data-status="APPLIED"></div>
+      </section>
+
+      <section class="kanban-col" data-status="INTERVIEW">
+        <div class="col-header">
+          <div class="col-title-wrap">
+            <span class="status-dot interview"></span>
+            <h2>INTERVIEW</h2>
+          </div>
+          <span class="col-count" id="count-INTERVIEW">0</span>
+        </div>
+        <div class="col-body" id="col-INTERVIEW" data-status="INTERVIEW"></div>
+      </section>
+
+      <section class="kanban-col" data-status="RESULT">
+        <div class="col-header">
+          <div class="col-title-wrap">
+            <span class="status-dot result"></span>
+            <h2>RESULT</h2>
+          </div>
+          <span class="col-count" id="count-RESULT">0</span>
+        </div>
+        <div class="col-body" id="col-RESULT" data-status="RESULT"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL: ADD / EDIT JOB ==================== -->
+  <div id="modal-job" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-job-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-job-title">Edit Job</h2>
+        <button type="button" class="modal-close" id="modal-job-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="job-form" novalidate>
+        <input type="hidden" id="edit-job-id" />
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="edit-title">Job Title *</label>
+            <input type="text" id="edit-title" placeholder="e.g., Frontend Intern" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-company">Company Name *</label>
+            <input type="text" id="edit-company" placeholder="e.g., Acme Tech" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-url">Job Application URL *</label>
+          <input type="url" id="edit-url" placeholder="https://..." required />
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="edit-deadline">Deadline Date</label>
+            <input type="date" id="edit-deadline" />
+          </div>
+          <div class="form-group">
+            <label for="edit-reminder">Reminder</label>
+            <select id="edit-reminder">
+              <option value="0">On deadline (9 AM)</option>
+              <option value="1">1 day before</option>
+              <option value="2">2 days before</option>
+              <option value="3">3 days before</option>
+              <option value="7">1 week before</option>
+              <option value="-1">No reminder</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-status">Status</label>
+            <select id="edit-status">
+              <option value="SAVED">Saved</option>
+              <option value="APPLIED">Applied</option>
+              <option value="INTERVIEW">Interview</option>
+              <option value="RESULT">Result</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="edit-location">Location</label>
+            <input type="text" id="edit-location" placeholder="e.g., Remote / Bengaluru" />
+          </div>
+          <div class="form-group">
+            <label for="edit-type">Employment Type</label>
+            <input type="text" id="edit-type" placeholder="e.g., Full-time / Internship" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-description">Job Description</label>
+          <textarea id="edit-description" rows="3" placeholder="Optional role details..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-notes">Personal Notes</label>
+          <textarea id="edit-notes" rows="2" placeholder="Interview prep, referral contact, compensation..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="modal-job-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-job-save">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: REMINDER SETTINGS ==================== -->
+  <div id="modal-settings" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-settings-title">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h2 id="modal-settings-title">Deadline Reminder Settings</h2>
+        <button type="button" class="modal-close" id="modal-settings-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="settings-form">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-title">Enable Deadline Notifications</div>
+            <div class="toggle-desc">Uses Chrome alarms to notify you even when the popup is closed</div>
+          </div>
+          <input type="checkbox" id="setting-notif-enabled" class="checkbox-lg" />
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="setting-default-days">Default Reminder Timing</label>
+          <select id="setting-default-days">
+            <option value="0">On deadline day (9:00 AM)</option>
+            <option value="1">1 day before deadline</option>
+            <option value="2">2 days before deadline</option>
+            <option value="3">3 days before deadline</option>
+            <option value="7">1 week before deadline</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="modal-settings-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

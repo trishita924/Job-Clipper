@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Clipper</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="brand">
+        <div class="brand-badge">JC</div>
+        <div>
+          <h1>Job Clipper</h1>
+          <span class="subtitle" id="popup-saved-count">0 saved jobs</span>
+        </div>
+      </div>
+      <button type="button" id="btn-open-dashboard" class="btn btn-ghost">Board ↗</button>
+    </header>
+
+    <div class="clip-banner">
+      <button type="button" id="btn-detect-job" class="btn btn-primary btn-full">
+        ✦ Save This Job (Auto-Detect)
+      </button>
+      <p class="banner-hint" id="detect-status">Click above to scan this page, or enter details below.</p>
+    </div>
+
+    <form id="popup-job-form" class="job-form" novalidate>
+      <div class="form-group">
+        <label for="job-title">Job / Internship Role *</label>
+        <input type="text" id="job-title" placeholder="e.g., Software Engineer Intern" required />
+      </div>
+
+      <div class="form-group">
+        <label for="job-company">Company Name *</label>
+        <input type="text" id="job-company" placeholder="e.g., Acme Corp" required />
+      </div>
+
+      <div class="form-group">
+        <label for="job-url">Application URL *</label>
+        <input type="url" id="job-url" placeholder="https://..." required />
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label for="job-deadline">Deadline</label>
+          <input type="date" id="job-deadline" />
+        </div>
+        <div class="form-group">
+          <label for="job-status">Status</label>
+          <select id="job-status">
+            <option value="SAVED">Saved</option>
+            <option value="APPLIED">Applied</option>
+            <option value="INTERVIEW">Interview</option>
+            <option value="RESULT">Result</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label for="job-location">Location</label>
+          <input type="text" id="job-location" placeholder="e.g., Bengaluru / Remote" />
+        </div>
+        <div class="form-group">
+          <label for="job-type">Employment Type</label>
+          <input type="text" id="job-type" placeholder="e.g., Full-time / Intern" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="job-description">Description</label>
+        <textarea id="job-description" rows="2" placeholder="Optional job summary..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="job-notes">Personal Notes</label>
+        <textarea id="job-notes" rows="2" placeholder="Referral, prep topics, salary..."></textarea>
+      </div>
+
+      <div id="popup-feedback" class="feedback hidden"></div>
+
+      <button type="submit" class="btn btn-violet btn-full">Save to Tracking Board</button>
+    </form>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
