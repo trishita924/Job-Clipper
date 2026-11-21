@@ -6,7 +6,11 @@ A smart, local-first Chrome and Brave extension to save job and internship listi
 
 ### 📦 [Download Job Clipper Extension (ZIP)](https://github.com/trishita924/Job-Clipper/archive/refs/heads/main.zip)
 
-### 🧩 [Open Brave Extensions](brave://extensions/)
+### 🧩 Open Brave Extensions
+
+Copy and paste this address into your Brave browser:
+
+brave://extensions/
 
 ## ✨ Features
 
